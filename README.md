@@ -152,6 +152,14 @@ Explore the
 
 ![](./imgs/telegraf-grpc-tls.png)
 
+Type exit to exit from the docker
+
+```
+root@61928aa7bdf1:~/telegraf# exit
+```
+
+
+
 Additional gRPC and Model Driven Telemetry configuration examples can be found on the Github page at [https://github.com/jeremycohoe/cisco-ios-xe-mdt](https://github.com/jeremycohoe/cisco-ios-xe-mdt)
 
 ## Add Device Health Dashboard + grpc-tls configurations
