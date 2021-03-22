@@ -135,6 +135,10 @@ The window on the **LEFT** indicates the non-secured telemetry connection, that 
 
 The window on the **RIGHT** indicates the secured telemetry connection, that has just come up as there is no historical mesurements for this counter.
 
+<img src="imgs/grafanahome.png" style="zoom:80%;" />
+
+
+
 ![](./imgs/grafana-secure.png)
 
 
