@@ -41,7 +41,7 @@ Before looking at the gRPC-TLS feature configuration, the required TLS certifica
 
 ## Load the certificates from the Ubuntu into the C9300 with the gnoi_cert tooling
 
-From the Ubuntu linux shell enter the **gnmi-ssl** directory and then go into the **certs** folder - these are the certs to load into the gNMI API via gNOI cert.proto's bootstrapping feature. If DayN/gNOI/cert.proto module was already completed then this step has already been completed.
+From the Ubuntu linux shell enter the **gnmi-ssl** directory and then go into the **certs** folder - these are the certs to load into the gNMI API via gNOI cert.proto's bootstrapping feature. If DayN/gNOI/cert.proto module  6 was already completed then this step has already been completed.
 
 **cd ~/gnmi_ssl/certs**
 
@@ -64,7 +64,7 @@ cd ~/gnmi_ssl/certs-grpc-tls/
 /home/auto/gnoi_cert -target_addr c9300:9339 -op provision  -target_name c9300 -alsologtostderr -organization "jcohoe org" -ip_address 10.1.1.5 -time_out=10s -min_key_size=2048 -cert_id grpc-dial-out-tls -state BC -country CA -ca ./myca.cert  -key ./myca.key
 ```
 
-Use the **show crypto pki trustpoint | i Tr** CLI to see details of the newly installed certificates. The gnoi_cert "GET" operation can also be used to see the certificate details.
+Login to the C9300 device and use the **show crypto pki trustpoint | i Tr** CLI to see details of the newly installed certificates. The gnoi_cert "GET" operation can also be used to see the certificate details.
 
 ```
 C9300#show crypto pki trustpoints | i Tr
@@ -164,7 +164,7 @@ Additional gRPC and Model Driven Telemetry configuration examples can be found o
 
 ## Add Device Health Dashboard + grpc-tls configurations
 
-Note; Add content from https://grafana.com/grafana/dashboards/13462 and adjust for TLS/IP's/etc
+Note: Add content from https://grafana.com/grafana/dashboards/13462 and adjust for TLS/IP's/etc
 
 
 
