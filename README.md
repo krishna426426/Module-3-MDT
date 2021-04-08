@@ -127,6 +127,135 @@ Telemetry subscription receivers detail:
 
 Proceed to the Grafana GUI , where the telemetry data is visualized
 
+
+
+## Telegraf, Influx, Grafana (TIG)
+
+![](imgs/tig.png)
+
+
+
+Telegraf is the tool that receives and decodes the telemetry data that is sent from the IOS XE devices. It processes the data and sends it into the InfluxDB datastore, where Grafana can access it to create visualizations.
+
+Telegraf runs inside the "tig_mdt" Docker container. To connect to this container from the Ubuntu host, follow the steps below:
+
+```
+auto@automation:~$ docker ps
+```
+
+
+
+![](imgs/tig_docker_ps.png)
+
+```
+auto@automation:~$ docker exec -it tig_mdt /bin/bash
+
+ <You are now within the Docker container>
+
+# cd /root/telegraf
+# ls
+```
+
+There is one file for each telemetry interface: **NETCONF**, **gRPC**, and **gNMI**. Review each file to understand which. YANG data is being collected by which interface.
+
+```
+# cat telegraf-grpc.conf
+# cat telegraf-gnmi.conf
+# cat telegraf-netconf.conf
+```
+
+![](imgs/docker_influx.png)
+
+
+
+Inside the Docker container navigate to the telegraf directory and review the configuration file and log by tailing the log file with the command **tail -F /tmp/telegraf-grpc.log**
+
+The **telegraf-grpc.conf** configuration file shows us the following:
+
+**gRPC Dial-Out Telemetry Input:** This defines the telegraf plugin (cisco_telemetry_mdt) that is being used to receive the data, as well as the port (57500)
+
+**Output Plugin:** This defines where the received data is sent to (outputs.influxdb), the database to use (telegraf), and the URL for InfluxDB ([http://127.0.0.1:8086](http://127.0.0.1:8086/))
+
+**Outputs.file** : sends a copy of the data to the text file at /root/telegraf/telegraf.log
+
+These configuration options are defined as per the README file in each respective input or output plugins. For more details of the cisco_telemetry_mdt plugin that is in use here, see the page at "https://github.com/influxdata/telegraf/tree/master/plugins/inputs/cisco_telemetry_mdt"
+
+Examining the output of the telegraf.log file shows the data coming in from the IOS XE device that matches the subscription we created and do ctrl+c to stop the output.
+
+**# tail -F /tmp/telegraf-grpc.log**
+
+![](imgs/tailf.png)
+
+
+
+## The Influx Database (influxdb)
+
+InfluxDB is already installed and started within the same Docker container. Let's verify it's working correctly by connecting to the Docker contain where it is running.
+
+Step 1. Verify InfluxDB is running with the command **ps xa | grep influx**
+
+```
+15 pts/0 Sl+ 1:45 /usr/bin/influxd -pidfile /var/run/influxdb/influxd.pid -config /etc/influxdb/influxdb.conf
+```
+
+Step 2. Verify the data stored on the Influx database using the command shown below:
+
+```
+root@43f8666d9ce0:~# influx
+Connected to http://localhost:8086 version 1.7.7
+InfluxDB shell version: 1.7.7
+> show databases
+name: databases
+name
+----
+_internal
+mdt_gnmi
+mdt_grpc
+mdt_grpc_tls
+mdt_netconf
+>
+> use mdt_grpc
+Using database mdt_grpc
+> show measurements
+name: measurements
+name
+----
+Cisco-IOS-XE-process-cpu-oper:cpu-usage/cpu-utilization
+>
+> SELECT COUNT("five_seconds") FROM "Cisco-IOS-XE-process-cpu-oper:cpu-usage/cpu-utilization"
+name: Cisco-IOS-XE-process-cpu-oper:cpu-usage/cpu-utilization
+time count
+---- -----
+0    1134
+>
+```
+
+
+
+The output above shows:
+
+- a **telegraf** database as defined in the Telegraf config file, which holds that telemetry data
+- one measurement defined as the YANG model used for the gRPC Dial-out subscription (Cisco-IOS-XE-process-cpu-oper:cpu-usage/cpu-utilization)
+- number of publications received so far (33251).
+
+
+
+![](imgs/influx2.png)
+
+
+
+# Grafana Dashboard
+
+Grafana is an open-source platform to build monitoring and analytics dashboards that also runs within the Docker container. Navigating to the web-based user interface allows us to see the dashboard with the Model Driven Telemetry data.
+
+Verify Grafana is running: with the following command: **ps xa | grep grafana**
+
+```
+44 ? Sl 0:32 /usr/sbin/grafana-server --pidfile=/var/run/grafana-server.pid --config=/etc/grafana/grafana.ini --packaging=deb cfg:default.paths.provisioning=/etc/grafana/provisioning cfg:default.paths.data=/var/lib/grafana cfg:default.paths.logs=/var/log/grafan cfg:default.paths.plugins=/var/lib/grafana/plugins**
+```
+
+
+
 ## Visualize gRPC-TLS with Grafana
 
 Open the Firefox browser and navigate to the Grafana tab or shortcut. 
@@ -148,7 +277,7 @@ The telegraf configuration file that is receiving the telemetry data on port 575
 
 The related TLS certifcates have been preinstalled into the Docker container's Telegraf configuration, located at **/root/telegraf/ssl** 
 
-Explore the 
+Explore the Docker container by running the command: **docker exec -it tig_mdt /bin/bash**
 
 ![](./imgs/telegraf-grpc-tls.png)
 
@@ -158,18 +287,24 @@ Type exit to exit from the docker
 root@61928aa7bdf1:~/telegraf# exit
 ```
 
+Additional gRPC and Model Driven Telemetry configuration examples can be found on the Github page at https://github.com/jeremycohoe/cisco-ios-xe-mdt
 
 
+
+## Add Device Health Dashboard ( optional / time permitting)
+
+This section is for your reference, 
+
+Review the content from https://grafana.com/grafana/dashboards/13462
+
+The Dashboard JSON can be imported into Grafana and,
+
+The CLI configuration for the 16 XPATHS can be copy/paste into the C9300.
+
+This provides a fundamental device health dashboard view and a simple way to view and validate the telemetry data that has been enabled for some of the most common features.
 
 # Conclusion
 
-This completes the gRPC-TLS section of the lab module. 
+This completes the gRPC-TLS section of the lab module. Refer to the previous lab guide, linked below, that covers gRPC telemetry in more detail, as well as Telegraf, InfluxDB, and Grafana - including the tig_mdt Docker container. This lab modules focus is on the gRPC-TLS telemetry connection, while the previous lab guide covers each of the Model Driven Telemetry (MDT) interfaces (NETCONF, gRPC, gNMI) in greater detail.
 
-For your reference, the following lab guide and links below, that covers gRPC telemetry in more detail, as well as Telegraf, InfluxDB, and Grafana - including the tig_mdt Docker container. It also covers each of the Model Driven Telemetry (MDT) interfaces (NETCONF, gRPC, gNMI) in greater detail. 
-
-[https://github.com/jeremycohoe/cisco-ios-xe-programmability-lab-module-6-mdt/blob/master/README-172.md](https://github.com/jeremycohoe/cisco-ios-xe-programmability-lab-module-6-mdt/blob/master/README-172.md)	
-
-Device Health Dashboard + grpc-tls configurations can be found at https://grafana.com/grafana/dashboards/13462 for TLS/IP's/etc
-
-Additional gRPC and Model Driven Telemetry configuration examples can be found on the Github page at [https://github.com/jeremycohoe/cisco-ios-xe-mdt](https://github.com/jeremycohoe/cisco-ios-xe-mdt)
-
+https://github.com/jeremycohoe/cisco-ios-xe-programmability-lab-module-6-mdt/blob/master/README-172.md
