@@ -293,7 +293,7 @@ Additional gRPC and Model Driven Telemetry configuration examples can be found o
 
 ## Add Device Health Dashboard ( optional / time permitting)
 
-This section is for your reference, 
+This section is for your reference only.
 
 Review the content from https://grafana.com/grafana/dashboards/13462
 
