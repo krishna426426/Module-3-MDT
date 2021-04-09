@@ -278,7 +278,7 @@ The telegraf configuration file that is receiving the telemetry data on port 575
 
 The related TLS certifcates have been preinstalled into the Docker container's Telegraf configuration, located at **/root/telegraf/ssl** and review by executing **cat telegraf-grpc-tls.conf**
 
-![](./imgs/telegraf-grpc-tls.png)
+![](./imgs/telegraf_grpc_tls.png)
 
 Type exit to exit from the docker
 
