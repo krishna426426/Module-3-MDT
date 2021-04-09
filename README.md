@@ -276,9 +276,7 @@ The window on the **RIGHT** indicates the secured telemetry connection, that has
 
 The telegraf configuration file that is receiving the telemetry data on port 57502 is within the **tig_mdt** Docker container at **/root/telegraf/**
 
-The related TLS certifcates have been preinstalled into the Docker container's Telegraf configuration, located at **/root/telegraf/ssl** and review by using **cat telegraf-grpc-tls.conf**
-
-
+The related TLS certifcates have been preinstalled into the Docker container's Telegraf configuration, located at **/root/telegraf/ssl** and review by executing **cat telegraf-grpc-tls.conf**
 
 ![](./imgs/telegraf-grpc-tls.png)
 
