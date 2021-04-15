@@ -214,8 +214,8 @@ mdt_grpc
 mdt_grpc_tls
 mdt_netconf
 >
-> use mdt_grpc
-Using database mdt_grpc
+> use mdt_grpc_tls
+Using database mdt_grpc_tls
 > show measurements
 name: measurements
 name
