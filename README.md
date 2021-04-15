@@ -226,7 +226,7 @@ Cisco-IOS-XE-process-cpu-oper:cpu-usage/cpu-utilization
 name: Cisco-IOS-XE-process-cpu-oper:cpu-usage/cpu-utilization
 time count
 ---- -----
-0    1134
+0    79
 >
 > exit
 ```
@@ -241,7 +241,7 @@ The output above shows:
 
 
 
-![](imgs/influx2.png)
+![](imgs/influx2_1.png)
 
 
 
