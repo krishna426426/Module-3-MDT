@@ -159,7 +159,7 @@ auto@automation:~$ docker exec -it tig_mdt /bin/bash
 There is one file for each telemetry interface: **NETCONF**, **gRPC**, and **gNMI**. Review each file to understand which. YANG data is being collected by which interface.
 
 ```
-# cat telegraf-grpc.conf
+# cat telegraf-grpc-tls.conf
 # cat telegraf-gnmi.conf
 # cat telegraf-netconf.conf
 ```
@@ -182,7 +182,7 @@ These configuration options are defined as per the README file in each respectiv
 
 Examining the output of the telegraf.log file shows the data coming in from the IOS XE device that matches the subscription we created and do ctrl+c to stop the output.
 
-**# tail -F /tmp/telegraf-grpc.log**
+**# tail -F /tmp/telegraf-grpc-tls.log**
 
 ![](imgs/tailf.png)
 
