@@ -237,7 +237,7 @@ The output above shows:
 
 - a **telegraf** database as defined in the Telegraf config file, which holds that telemetry data
 - one measurement defined as the YANG model used for the gRPC Dial-out subscription (Cisco-IOS-XE-process-cpu-oper:cpu-usage/cpu-utilization)
-- number of publications received so far (33251).
+- number of publications received so far (79).
 
 
 
