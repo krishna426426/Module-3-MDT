@@ -164,15 +164,15 @@ There is one file for each telemetry interface: **NETCONF**, **gRPC**, and **gNM
 # cat telegraf-netconf.conf
 ```
 
-![](imgs/docker_influx.png)
+![](imgs/docker_influx_1.png)
 
 
 
-Inside the Docker container navigate to the telegraf directory and review the configuration file and log by tailing the log file with the command **tail -F /tmp/telegraf-grpc.log**
+Inside the Docker container navigate to the telegraf directory and review the configuration file and log by tailing the log file with the command **tail -F /tmp/telegraf-grpc-tls.log**
 
-The **telegraf-grpc.conf** configuration file shows us the following:
+The **telegraf-grpc-tls.conf** configuration file shows us the following:
 
-**gRPC Dial-Out Telemetry Input:** This defines the telegraf plugin (cisco_telemetry_mdt) that is being used to receive the data, as well as the port (57500)
+**gRPC Dial-Out Telemetry Input:** This defines the telegraf plugin (cisco_telemetry_mdt) that is being used to receive the data, as well as the port (57501)
 
 **Output Plugin:** This defines where the received data is sent to (outputs.influxdb), the database to use (telegraf), and the URL for InfluxDB ([http://127.0.0.1:8086](http://127.0.0.1:8086/))
 
